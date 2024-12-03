@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -17,6 +17,7 @@ import { NgIf } from '@angular/common';
                         [attr.fill]="isLiked ? '#E57373' : 'transparent'"/>
             </svg>
         </button>
+        <p>Hello, {{ name() }}!</p>
     `,
     styles: `
       .like-button {
@@ -52,9 +53,19 @@ import { NgIf } from '@angular/common';
 export class LikeButtonComponent {
     @Input({ transform: booleanAttribute, alias: 'isliked' }) isLiked = false;
     @Output('liketoggle') likeToggle = new EventEmitter<boolean>();
+    @Input() name: WritableSignal<string> = signal('World');
     
     toggleLiked() {
         this.isLiked = !this.isLiked;
+        if (this.isLiked)
+        {
+          this.name.set('Angular Signal');
+        }
+        else
+        {
+          this.name.set('World');
+        }
+       
         this.likeToggle.emit(this.isLiked);
     }
 }
